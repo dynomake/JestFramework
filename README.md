@@ -1,5 +1,5 @@
 ## | `JestFramework`
-A small & fast but convenient framework for working with dependencies. I'll add dependency injection soon.
+The framework for creating a Restful API is as simple as possible.
 
 ### | `Links`:
 * [About this learn project ](https://github.com/suuft/JestFramework/blob/master/LEARN.md)
