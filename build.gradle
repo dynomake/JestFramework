@@ -1,0 +1,42 @@
+plugins {
+    id 'java'
+    id 'maven-publish'
+}
+
+group 'net.jest.clojars'
+version '1.0-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+    maven {
+        name = "clojars.org"
+        url = uri("https://repo.clojars.org")
+    }
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    implementation 'net.clojars.suuft:lithe:2.0.1'
+    implementation 'org.reflections:reflections:0.10.2'
+    implementation 'com.google.code.gson:gson:2.8.7'
+}
+
+publishing {
+    repositories {
+        maven {
+            name = "clojars"
+            url = uri("https://clojars.org/repo")
+            credentials {
+                username = clojarsUserName
+                password = clojarsDeployToken
+            }
+        }
+
+    }
+    publications {
+        gpr(MavenPublication) {
+            from(components.java)
+        }
+    }
+}
