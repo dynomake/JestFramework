@@ -12,7 +12,14 @@ public class CacheUtil {
     public static final Map<Class<?>, Object> classInstanceMap = new LinkedHashMap<>();
 
     public <T> T putIfAbsent(@NonNull Class<T> tClass) {
-        try { return (T) classInstanceMap.putIfAbsent(tClass, tClass.newInstance()); }
+        try {
+            T t  = (T) classInstanceMap.get(tClass);
+            if (t == null) {
+                t =  tClass.newInstance();
+                classInstanceMap.put(tClass, t);
+            }
+            return t;
+        }
         catch (Exception exception) { return null; }
     }
 }

@@ -3,8 +3,11 @@ plugins {
     id 'maven-publish'
 }
 
-group 'net.suuft.clojars'
+group 'works.naifu'
 version '1.0.1'
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
 
 repositories {
     mavenCentral()

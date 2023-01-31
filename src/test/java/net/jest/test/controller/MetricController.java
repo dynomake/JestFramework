@@ -26,4 +26,9 @@ public class MetricController {
         count-=toAdd;
         return ResponseUtil.createResponse(ResponseUtil.OK, "new count = " + count);
     }
+
+    @Method(name = "/get", type = "POST")
+    public Response get() {
+        return ResponseUtil.createResponse(ResponseUtil.OK, count);
+    }
 }

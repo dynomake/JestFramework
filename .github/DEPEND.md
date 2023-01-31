@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     // other depends
-    implementation 'net.clojars.suuft:jest:1.0.1'
+    implementation 'works.naifu:jest:1.0.1'
 }
 ```
 
@@ -33,7 +33,7 @@ Depend:
 ```xml
 
 <dependency>
-    <groupId>net.clojars.suuft</groupId>
+    <groupId>works.naifu</groupId>
     <artifactId>jest</artifactId>
     <version>1.0.1</version>
 </dependency>

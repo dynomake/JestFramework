@@ -9,7 +9,7 @@ import lombok.experimental.FieldDefaults;
 import java.util.*;
 import java.util.regex.Pattern;
 import static java.util.stream.Collectors.*;
-import static sun.net.www.ParseUtil.decode;
+import sun.net.www.ParseUtil;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
@@ -55,7 +55,7 @@ public class Request {
 
         return new Request(Pattern.compile("&").splitAsStream(query)
                 .map(s -> Arrays.copyOf(s.split("="), 2))
-                .collect(groupingBy(s -> decode(s[0]), mapping(s -> decode(s[1]), toList()))), exchange);
+                .collect(groupingBy(s -> (Object)ParseUtil.decode(s[0]), mapping(s -> (Object)ParseUtil.decode(s[1]), toList()))), exchange);
     }
 
 }
