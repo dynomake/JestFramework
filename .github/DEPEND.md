@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     // other depends
-    implementation 'net.clojars.suuft:jest:1.0.0'
+    implementation 'net.clojars.suuft:jest:1.0.1'
 }
 ```
 
@@ -35,6 +35,6 @@ Depend:
 <dependency>
     <groupId>net.clojars.suuft</groupId>
     <artifactId>jest</artifactId>
-    <version>1.0.0</version>
+    <version>1.0.1</version>
 </dependency>
 ```

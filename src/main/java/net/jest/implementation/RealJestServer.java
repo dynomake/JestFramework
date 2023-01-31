@@ -1,5 +1,6 @@
 package net.jest.implementation;
 
+import com.sun.net.httpserver.HttpExchange;
 import com.sun.net.httpserver.HttpServer;
 import lombok.NonNull;
 import lombok.Setter;
@@ -36,8 +37,14 @@ public class RealJestServer implements JestServer {
             Object controllerInstance = controllerClass.newInstance();
 
             for (Method method : controllerClass.getDeclaredMethods()) {
+
                 Function<Request, Response> function = MethodParser.parse(controller, controllerInstance, method);
-                if (function != null) patchRequestHandlerMap.put(MethodParser.getName(controller, method), function);
+                String path = MethodParser.getName(controller, method);
+
+                if (function != null) {
+                    patchRequestHandlerMap.put(path, function);
+                    print("Success registered %s restful-method", path);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -59,7 +66,7 @@ public class RealJestServer implements JestServer {
 
                 print("Try handle new request: `%s/%s`", path, query);
 
-                Response response = findResponse(path, query);
+                Response response = findResponse(path, exchange);
 
                 ExchangeUtil.returnString(exchange, response.getOutput(), response.getStatusCode());
 
@@ -74,9 +81,9 @@ public class RealJestServer implements JestServer {
         }
     }
 
-    private Response findResponse(@NonNull String path, String query) {
+    private Response findResponse(@NonNull String path, HttpExchange exchange) {
         Function<Request, Response> method = patchRequestHandlerMap.get(path.toLowerCase());
         return method == null ? ResponseUtil.createResponse(ResponseUtil.NOT_FOUND, "This method was not found.")
-                : method.apply(Request.fromQuery(query));
+                : method.apply(Request.fromExchange(exchange));
     }
 }
