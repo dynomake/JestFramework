@@ -53,6 +53,29 @@ public class RealJestServer implements JestServer {
     }
 
     @Override
+    public void registerRestController(@NonNull Object instance) {
+        Controller controller = instance.getClass().getDeclaredAnnotation(Controller.class);
+
+        if (controller == null)
+            throw new IllegalArgumentException(instance.getClass().getName() + " don't has @Controller annotation!");
+        try {
+
+            for (Method method : instance.getClass().getDeclaredMethods()) {
+
+                Function<Request, Response> function = MethodParser.parse(controller, instance, method);
+                String path = MethodParser.getName(controller, method);
+
+                if (function != null) {
+                    patchRequestHandlerMap.put(path, function);
+                    print("Success registered %s restful-method", path);
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    @Override
     public void run() {
         print("Try boot Jest-Server instance on ip `%s:%s`", host, port);
         try {
