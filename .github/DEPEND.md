@@ -13,7 +13,7 @@ repositories {
 
 dependencies {
     // other depend
-    implementation 'works.naifu:jest:1.0.2'
+    implementation 'works.naifu:jest:1.0.3'
 }
 ```
 
@@ -35,6 +35,6 @@ Depend:
 <dependency>
     <groupId>works.naifu</groupId>
     <artifactId>jest</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
 </dependency>
 ```
