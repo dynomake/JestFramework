@@ -27,6 +27,16 @@ public class MetricController {
         return ResponseUtil.createResponse(ResponseUtil.OK, "new count = " + count);
     }
 
+    @RequiredAuth(TokenAuthorization.class)
+    @Method(name = "/print-and-print")
+    public Response test(@Parameter("text1") String text1, @Parameter("text") String text) {
+        System.out.println("TEXT1: " + text1);
+        System.out.println("TEXT2: " + text);
+
+        return ResponseUtil.createResponse(ResponseUtil.OK, "Success");
+    }
+
+
     @Method(name = "/get", type = "POST")
     public Response get() {
         return ResponseUtil.createResponse(ResponseUtil.OK, count);

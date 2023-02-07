@@ -67,7 +67,7 @@ public class RealJestServer implements JestServer {
 
                 if (function != null) {
                     patchRequestHandlerMap.put(path, function);
-                    print("Success registered %s restful-method", path);
+                    print("Success registered %s restful-method.", path);
                 }
             }
         } catch (Exception e) {
