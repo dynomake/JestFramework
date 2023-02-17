@@ -9,7 +9,7 @@ import net.jest.api.Controller;
 import net.jest.api.response.Response;
 import net.jest.api.util.ResponseUtil;
 import net.jest.reflect.MethodParser;
-import net.jest.request.Request;
+import net.jest.implementation.request.RealRequestSource;
 import net.jest.util.ExchangeUtil;
 import java.lang.reflect.Method;
 import java.net.InetSocketAddress;
@@ -22,7 +22,7 @@ import static net.jest.util.DebugUtil.print;
 public class RealJestServer implements JestServer {
 
     // TODO : fix that bad solution
-    private final Map<String, Function<Request, Response>> patchRequestHandlerMap = new LinkedHashMap<>();
+    private final Map<String, Function<RealRequestSource, Response>> patchRequestHandlerMap = new LinkedHashMap<>();
 
     private int port;
     private String host;
@@ -38,7 +38,7 @@ public class RealJestServer implements JestServer {
 
             for (Method method : controllerClass.getDeclaredMethods()) {
 
-                Function<Request, Response> function = MethodParser.parse(controller, controllerInstance, method);
+                Function<RealRequestSource, Response> function = MethodParser.parse(controller, controllerInstance, method);
                 String path = MethodParser.getName(controller, method);
 
                 if (function != null) {
@@ -62,7 +62,7 @@ public class RealJestServer implements JestServer {
 
             for (Method method : instance.getClass().getDeclaredMethods()) {
 
-                Function<Request, Response> function = MethodParser.parse(controller, instance, method);
+                Function<RealRequestSource, Response> function = MethodParser.parse(controller, instance, method);
                 String path = MethodParser.getName(controller, method);
 
                 if (function != null) {
@@ -105,8 +105,8 @@ public class RealJestServer implements JestServer {
     }
 
     private Response findResponse(@NonNull String path, HttpExchange exchange) {
-        Function<Request, Response> method = patchRequestHandlerMap.get(path.toLowerCase());
+        Function<RealRequestSource, Response> method = patchRequestHandlerMap.get(path.toLowerCase());
         return method == null ? ResponseUtil.createResponse(ResponseUtil.NOT_FOUND, "This method was not found.")
-                : method.apply(Request.fromExchange(exchange));
+                : method.apply(RealRequestSource.fromExchange(exchange));
     }
 }

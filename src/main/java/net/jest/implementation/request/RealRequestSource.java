@@ -1,4 +1,4 @@
-package net.jest.request;
+package net.jest.implementation.request;
 
 import com.sun.net.httpserver.HttpExchange;
 import lombok.AccessLevel;
@@ -6,15 +6,19 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NonNull;
 import lombok.experimental.FieldDefaults;
+
+import java.net.InetSocketAddress;
 import java.util.*;
 import java.util.regex.Pattern;
 import static java.util.stream.Collectors.*;
+
+import net.jest.api.RequestSource;
 import sun.net.www.ParseUtil;
 
 @Getter
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @AllArgsConstructor
-public class Request {
+public class RealRequestSource implements RequestSource {
 
     Map<Object, List<Object>> parameters;
     HttpExchange exchange;
@@ -23,7 +27,7 @@ public class Request {
      * Getting and parsing query parameter to needed type.
      * If query don't has parameter ll return null;
      */
-    public <T> T getParameter(@NonNull Class<T> parameterClass, @NonNull String parameterName) {
+    public <T> T parseParameter(@NonNull Class<T> parameterClass, @NonNull String parameterName) {
         try {
             if (parameterClass.equals(int.class) || parameterClass.equals(long.class) || parameterClass.equals(short.class)) {
                 return (T) (Object) Integer.parseInt(parameters.get(parameterName).get(0).toString());
@@ -37,6 +41,21 @@ public class Request {
         }
     }
 
+    @Override
+    public String getHeader(@NonNull String parameterName) {
+        return exchange.getRequestHeaders().getFirst(parameterName);
+    }
+
+    @Override
+    public InetSocketAddress getRemoteAddress() {
+        return exchange.getRemoteAddress();
+    }
+
+    @Override
+    public HttpExchange getHandle() {
+        return exchange;
+    }
+
     /**
      * Check for contains query parameter in this request.
      *
@@ -47,13 +66,18 @@ public class Request {
         return parameters.containsKey(parameterName);
     }
 
-    public static Request fromExchange(HttpExchange exchange) {
+    @Override
+    public String getParameter(@NonNull String parameterName) {
+        return Objects.requireNonNull(parameters.get(parameterName).stream().findFirst().orElse(null)).toString();
+    }
+
+    public static RealRequestSource fromExchange(HttpExchange exchange) {
         String query = exchange.getRequestURI().getRawQuery();;
         if (query == null || "".equals(query) || "null".equals(query)) {
-            return new Request(Collections.emptyMap(), exchange);
+            return new RealRequestSource(Collections.emptyMap(), exchange);
         }
 
-        return new Request(Pattern.compile("&").splitAsStream(query)
+        return new RealRequestSource(Pattern.compile("&").splitAsStream(query)
                 .map(s -> Arrays.copyOf(s.split("="), 2))
                 .collect(groupingBy(s -> (Object)ParseUtil.decode(s[0]), mapping(s -> (Object)ParseUtil.decode(s[1]), toList()))), exchange);
     }

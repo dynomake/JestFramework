@@ -1,9 +1,6 @@
 package net.jest.test.controller;
 
-import net.jest.api.Controller;
-import net.jest.api.Method;
-import net.jest.api.Parameter;
-import net.jest.api.RequiredAuth;
+import net.jest.api.*;
 import net.jest.api.response.Response;
 import net.jest.api.util.ResponseUtil;
 import net.jest.test.authorization.TokenAuthorization;
@@ -13,31 +10,35 @@ public class MetricController {
 
     private int count;
 
-    @RequiredAuth(TokenAuthorization.class)
+    @Parameter("count")
+    @Authorization(TokenAuthorization.class)
     @Method(name = "/add", type = "POST")
-    public Response add(@Parameter("count") int toAdd) {
-        count+=toAdd;
+    public Response add(RequestSource request) {
+        count+=request.parseParameter(int.class, "count");
         return ResponseUtil.createResponse(ResponseUtil.OK, "new count = " + count);
     }
 
-    @RequiredAuth(TokenAuthorization.class)
+    @Parameter("count")
+    @Authorization(TokenAuthorization.class)
     @Method(name = "/subtract", type = "POST")
-    public Response subtract(@Parameter("count") int toAdd) {
-        count-=toAdd;
+    public Response subtract(RequestSource request) {
+        count-=request.parseParameter(int.class, "count");
         return ResponseUtil.createResponse(ResponseUtil.OK, "new count = " + count);
     }
 
-    @RequiredAuth(TokenAuthorization.class)
+    @Parameter("one")
+    @Parameter("two")
+    @Authorization(TokenAuthorization.class)
     @Method(name = "/print-and-print")
-    public Response test(@Parameter("text1") String text1, @Parameter("text") String text) {
-        System.out.println("TEXT1: " + text1);
-        System.out.println("TEXT2: " + text);
+    public Response test(RequestSource request) {
+        System.out.println("TEXT1: " + request.getParameter("one"));
+        System.out.println("TEXT2: " + request.getParameter("two"));
 
         return ResponseUtil.createResponse(ResponseUtil.OK, "Success");
     }
 
 
-    @Method(name = "/get", type = "POST")
+    @Method(name = "/get", type = "GET")
     public Response get() {
         return ResponseUtil.createResponse(ResponseUtil.OK, count);
     }

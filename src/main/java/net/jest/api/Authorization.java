@@ -6,7 +6,7 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface RequiredAuth {
+public @interface Authorization {
 
     Class<? extends AbstractAuthorization> value();
 

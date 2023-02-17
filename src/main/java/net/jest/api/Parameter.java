@@ -1,12 +1,13 @@
 package net.jest.api;
 
-import java.lang.annotation.ElementType;
-import java.lang.annotation.Retention;
-import java.lang.annotation.RetentionPolicy;
-import java.lang.annotation.Target;
+import java.lang.annotation.*;
 
+
+@Target(ElementType.METHOD)
 @Retention(RetentionPolicy.RUNTIME)
-@Target(ElementType.PARAMETER)
+@Repeatable(RepeatableParameterAnnotation.class)
+
 public @interface Parameter {
     String value();
 }
+

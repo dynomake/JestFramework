@@ -4,7 +4,7 @@ plugins {
 }
 
 group 'works.naifu'
-version '1.0.4'
+version '1.2.0'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -20,6 +20,9 @@ repositories {
 dependencies {
     compileOnly 'org.projectlombok:lombok:1.18.24'
     annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+
     implementation 'com.google.code.gson:gson:2.8.7'
 }
 

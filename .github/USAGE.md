@@ -18,22 +18,24 @@ public class Main {
     }
 }
 ```
-Next, we will create a controller that ll be marked with the @Controller annotation, for example, ll make a metric controller that ll add and subtract, and return new number on request.
+Next, we will create a controller that ll be marked with the @Controller annotation, for example, ll make a metric controller that ll add and subtract, and return new number on requestSource.
 ```java
 @Controller(path = "/api/metric")
 public class MetricController {
 
     private int count;
 
-    @Method(name = "/add", type = "POST") // address: localhost:8080/api/metric/add?count=NUMBER
-    public Response add(@Parameter("count") int toAdd) {
-        count+=toAdd;
+    @Parameter("count")
+    @Method(name = "/add", type = "POST")
+    public Response add(RequestSource request) {
+        count+=request.parseParameter(int.class, "count");
         return ResponseUtil.createResponse(ResponseUtil.OK, "new count = " + count);
     }
 
-    @Method(name = "/subtract", type = "POST") // address: localhost:8080/api/metric/subtract?count=NUMBER
-    public Response subtract(@Parameter("count") int toAdd) {
-        count-=toAdd;
+    @Parameter("count")
+    @Method(name = "/subtract", type = "POST")
+    public Response subtract(RequestSource request) {
+        count-=request.parseParameter(int.class, "count");
         return ResponseUtil.createResponse(ResponseUtil.OK, "new count = " + count);
     }
 }
