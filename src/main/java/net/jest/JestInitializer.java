@@ -3,6 +3,7 @@ package net.jest;
 import lombok.NonNull;
 import lombok.experimental.UtilityClass;
 import net.jest.api.JestBootstrap;
+import net.jest.api.TlsSecure;
 import net.jest.implementation.RealJestServer;
 
 @UtilityClass
@@ -24,9 +25,14 @@ public class JestInitializer {
 
         jestServer.setHost(bootstrap.hostName());
         jestServer.setPort(bootstrap.port());
+        jestServer.setDefaultPath(bootstrap.defaultPath());
+
+        jestServer.setTls(bootClass.getAnnotation(TlsSecure.class));
 
         jestServer.run();
 
         return jestServer;
     }
+
+
 }

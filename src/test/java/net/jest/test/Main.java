@@ -3,6 +3,7 @@ package net.jest.test;
 import net.jest.JestInitializer;
 import net.jest.JestServer;
 import net.jest.api.JestBootstrap;
+import net.jest.api.TlsSecure;
 import net.jest.test.controller.MetricController;
 
 @JestBootstrap(port = 8080, hostName = "localhost")
